@@ -4,11 +4,11 @@
     <section class="content-header">
         <h1>
             Kelola
-            <small>Users</small>
+            <small>pasien</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="<?php echo base_url('admin/dashboard') ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Users</li>
+            <li class="active">pasien</li>
         </ol>
     </section>
 
@@ -21,7 +21,7 @@
                     <div class="box-header">
                         <h3 class="box-title">Ubah User</h3>
                     </div>
-                    <form role="form" action="<?php base_url('users/ubah') ?>" method="post">
+                    <form role="form" action="<?php base_url('pasien/ubah') ?>" method="post">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="jabatan">Pilih Jabatan</label>
@@ -41,7 +41,7 @@
 
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary">Tambah</button>
-                            <a href="<?= base_url('users') ?>" class="btn btn-warning">Kembali</a>
+                            <a href="<?= base_url('pasien') ?>" class="btn btn-warning">Kembali</a>
                         </div>
                     </form>
                 </div>
@@ -61,8 +61,8 @@
     $(document).ready(function() {
         $("#groups").select2();
 
-        $("#userMainNav").addClass('active');
-        $("#ubahUserSubNav").addClass('active');
+        $("#pasienMainNav").addClass('active');
+        $("#ubahpasienSubNav").addClass('active');
 
     });
 </script>

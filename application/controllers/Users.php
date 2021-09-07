@@ -23,6 +23,12 @@ class Users extends Admin_Controller
     //edit user
     public function ubah()
     {
-        $this->render_template('users/edit', $this->data);
+        $this->render_template('users/ubah', $this->data);
     }
+
+     //Profile
+     public function profile()
+     {
+         $this->render_template('users/profile', $this->data);
+     }
 }

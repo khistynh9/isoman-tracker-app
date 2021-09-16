@@ -6,6 +6,7 @@ class Jabatan extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
+        //$this->not_logged_in();
         $this->data['page_title'] = 'Jabatan';
 
         $this->load->model('model_jabatan');
@@ -14,9 +15,9 @@ class Jabatan extends Admin_Controller
     //manage users
     public function index()
     {
-        // if (!in_array('viewJabatan', $this->hak_akses)) {
-        // 	redirect('admin/dashboard', 'refresh');
-        // }
+        if (!in_array('viewJabatan', $this->hak_akses)) {
+            redirect('dashboard', 'refresh');
+        }
 
         $groups_data = $this->model_jabatan->getJabatanData();
         $this->data['jabatan_data'] = $groups_data;
@@ -27,9 +28,9 @@ class Jabatan extends Admin_Controller
     //create user
     public function tambah()
     {
-        // if (!in_array('createJabatan', $this->hak_akses)) {
-        // 	redirect('admin/dashboard', 'refresh');
-        // }
+        if (!in_array('createJabatan', $this->hak_akses)) {
+            redirect('dashboard', 'refresh');
+        }
 
         $this->form_validation->set_rules('group_name', 'Nama Jabatan', 'required');
 
@@ -58,9 +59,10 @@ class Jabatan extends Admin_Controller
     //edit user
     public function ubah($id = null)
     {
-        // if (!in_array('updateJabatan', $this->hak_akses)) {
-        //     redirect('admin/dashboard', 'refresh');
-        // }
+        if (!in_array('updateJabatan', $this->hak_akses)) {
+            redirect('dashboard', 'refresh');
+        }
+
 
         if ($id) {
             $this->form_validation->set_rules('group_name', 'Nama Jabatan', 'required');
@@ -75,6 +77,8 @@ class Jabatan extends Admin_Controller
                 );
 
                 $update = $this->model_jabatan->edit($data, $id);
+                // var_dump($update);
+                // exit();
                 if ($update == true) {
                     $this->session->set_flashdata('success', 'Berhasil Diubah!');
                     redirect('jabatan', 'refresh');
@@ -94,9 +98,9 @@ class Jabatan extends Admin_Controller
     //remove level
     public function delete()
     {
-        // if (!in_array('deleteJabatan', $this->hak_akses)) {
-        // 	redirect('admin/dashboard', 'refresh');
-        // }
+        if (!in_array('deleteJabatan', $this->hak_akses)) {
+            redirect('dashboard', 'refresh');
+        }
 
         $jabatan_id = $this->input->post('jabatan_id');
 

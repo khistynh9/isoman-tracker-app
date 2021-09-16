@@ -3,12 +3,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Profile
-            <small>Users</small>
+            User
+            <small>Profile</small>
         </h1>
         <ol class="breadcrumb">
-            <li><a href="<?php echo base_url('admin/dashboard') ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Users</li>
+            <li><a href="<?= base_url('dashboard') ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active">Profile</li>
         </ol>
     </section>
 
@@ -17,24 +17,41 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-md-12 col-xs-12">
+
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Ubah Profile</h3>
+                        <h3 class="box-title">Profile </h3>
                     </div>
+                    <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="userProfile" class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <td>Nama</td>
-                                    <td>Khisty NH</td>
-                                </tr>
-                                <tr>
-                                    <td>Alamat</td>
-                                    <td>Tasikmalaya</td>
-                                </tr>
-                            </tbody>
+                        <table class="table table-bordered table-condensed table-hovered">
+                            <tr>
+                                <th>Username</th>
+                                <td><?php echo $users_data['username']; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td><?php echo $users_data['email']; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Nama</th>
+                                <td><?php echo $users_data['nama']; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Jenis Kelamin</th>
+                                <td><?php echo ($users_data['jenis_kel'] == 1) ? 'Laki-laki' : 'Jenis Kelamin'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>No HP</th>
+                                <td><?php echo $users_data['no_hp']; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Jabatan</th>
+                                <td><span class="badge bg-aqua"><?php echo $user_datas['nama_level'] . " " . $puskesmas = $user_datas['id'] == 1 ? " " : $user_datas['nama_puskesmas']; ?></span></td>
+                            </tr>
                         </table>
                     </div>
+                    <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
             </div>
@@ -50,11 +67,6 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#userProfile').DataTable({
-            'order': [],
-        });
-
-        $("#userMainNav").addClass('active');
         $("#profileMainNav").addClass('active');
     });
 </script>

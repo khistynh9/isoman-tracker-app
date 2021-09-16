@@ -79,7 +79,15 @@ class Pasien extends Admin_Controller
         foreach ($data as $key => $value) {
             $puskesmas_data = $this->model_puskesmas->getPuskesmasData($value['puskesmas_id']);
 
-            $status = ($value['status'] == 1) ? '<span class="label label-success">Aktif</span>' : '<span class="label label-warning">Nonaktif</span>';
+            if ($value['status'] == 1) {
+                $status = '<span class="label label-warning">Positif Covid</span>';
+            } else if ($value['status'] == 2) {
+                $status = '<span class="label label-success">Negatif Covid</span>';
+            } else if ($value['status'] == 3) {
+                $status = '<span class="label label-primary">Sembuh</span>';
+            } else if ($value['status'] == 4) {
+                $status = '<span class="label label-warning">Meninggal</span>';
+            }
 
             $result['data'][$key] = array(
                 $value['nik'],

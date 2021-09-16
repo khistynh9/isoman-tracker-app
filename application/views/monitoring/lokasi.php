@@ -205,6 +205,29 @@
         return status == '1' ? 'blue' : status == '2' ? 'red' : white;
     }
 
+    function editDanger(nik, status) {
+        var nik_paisen = nik;
+        var status_pas = status;
+        // $.ajax({
+        //     type: 'ajax',
+        //     method: 'post',
+        //     url: base_url + 'monitoring/ubahStat/' + nik_paisen,
+        //     data: {
+        //         nik: nik_paisen
+        //     },
+        //     async: false,
+        //     dataType: 'JSON',
+        //     success: function(data) {
+        //         $('input[name=kode_barang]').val(data.kode_barang);
+        //         $('input[name=nama_produk]').val(data.nama_produk);
+        //     },
+        //     error: function() {
+        //         alert('Could not edit data.');
+        //     }
+        // });
+
+    }
+
     function getDistance(origin, destination, status, nik) {
         // return distance in meters
         // console.group(`origin`);
@@ -231,6 +254,7 @@
                     user.ref.child("status").set(danger);
                 });
             })
+            editDanger(nik_pas, danger);
             return danger;
         } else if (radius <= 100) {
             var aman = 1;

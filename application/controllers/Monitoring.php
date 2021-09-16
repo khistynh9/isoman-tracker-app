@@ -54,4 +54,9 @@ class Monitoring extends Admin_Controller
 
         $this->render_template('monitoring/lokasi', $this->data);
     }
+
+    public function ubahStat()
+    {
+        $nik = $this->input->post('nik');
+    }
 }

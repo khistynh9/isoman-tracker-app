@@ -25,7 +25,7 @@
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <button onclick="ubahdata('3454354354354353')">ubah</button>
+
                             <div class="col-md-12 col-xs-12">
                                 <div class="row">
                                     <div class="col-md-5">
@@ -187,27 +187,58 @@
 
             }
         });
-        //bbTeam.addData(datasParam);
-        markersLayer.addLayer(bbTeam);
-        // console.group(`ini bbTeam`);
-        // console.log(bbTeam);
-        // console.groupEnd();
-    }
 
-    // map.addControl(controlSearch);
-    // markersLayer.addLayer(bbTeam);
-    // console.group(`ini databbTeam`);
-    // console.log(bbTeam);
-    // console.groupEnd();
+        markersLayer.addLayer(bbTeam);
+
+    }
 
     //set warna status
     function getColor(status) {
         return status == '1' ? 'blue' : status == '2' ? 'red' : white;
     }
 
+    function danger(nik_pas, stat) {
+        var danger = 2;
+        if (stat == 1) {
+            console.group(`DANGER`);
+            // console.log(radius);
+            console.groupEnd();
+
+            db.ref("lokasi").orderByChild("nik").equalTo(nik_pas).once("value", function(snapshot) {
+                snapshot.forEach(function(user) {
+                    user.ref.child("status").set(2);
+                });
+            });
+            return danger;
+        } else if (stat == 2) {
+            console.group(`TETAP DANGER`);
+            // console.log(radius);
+            console.groupEnd();
+            //     return aman;
+            return danger;
+        }
+    }
+
     function editDanger(nik, status) {
-        var nik_paisen = nik;
-        var status_pas = status;
+        // var nik_paisen = nik;
+        var aman = 1;
+        if (status == 2) {
+            console.group(`AMAN KEMBALI`);
+            // console.log(radius);
+            console.groupEnd();
+            db.ref("lokasi").orderByChild("nik").equalTo(nik).once("value", function(snapshot) {
+                snapshot.forEach(function(user) {
+                    user.ref.child("status").set(1);
+                });
+            })
+            return aman;
+        } else if (status == 1) {
+            console.group(`AMAN`);
+            // console.log(radius);
+            console.groupEnd();
+            //     return aman;
+            return aman;
+        }
         // $.ajax({
         //     type: 'ajax',
         //     method: 'post',
@@ -229,10 +260,7 @@
     }
 
     function getDistance(origin, destination, status, nik) {
-        // return distance in meters
-        // console.group(`origin`);
-        // console.log(origin);
-        // console.groupEnd();
+
         var lon1 = toRadian(origin[0]),
             lat1 = toRadian(origin[1]),
             lon2 = toRadian(destination[0]),
@@ -248,25 +276,16 @@
         var EARTH_RADIUS = 6371;
         var radius = c * EARTH_RADIUS * 1000; //in meters
         if (radius > 100) {
-            var danger = 2;
-            db.ref("lokasi").orderByChild("nik").equalTo(nik_pas).once("value", function(snapshot) {
-                snapshot.forEach(function(user) {
-                    user.ref.child("status").set(danger);
-                });
-            })
-            editDanger(nik_pas, danger);
-            return danger;
+            if (stat == 1 || stat == 2) {
+
+                danger(nik_pas, stat);
+            }
+
         } else if (radius <= 100) {
-            var aman = 1;
-            if (stat == 2) {
-                db.ref("lokasi").orderByChild("nik").equalTo(nik_pas).once("value", function(snapshot) {
-                    snapshot.forEach(function(user) {
-                        user.ref.child("status").set(aman);
-                    });
-                })
-                return aman;
-            } else {
-                return aman;
+
+            if (stat == 1 || stat == 2) {
+
+                editDanger(nik_pas, stat);
             }
 
         }
@@ -283,9 +302,6 @@
         var nik = feature.properties.nik;
         var status = feature.properties.status;
         var distance = getDistance(awal, akhir, status, nik);
-        // console.group(`cek aman`);
-        // console.log(distance);
-        // console.groupEnd();
 
         var popupContent = "<p>Pasien <p>" +
             "Nama: " + feature.properties.nama +

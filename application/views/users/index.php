@@ -71,23 +71,16 @@
                                             <td><?php echo $v['user_jabatan']['nama_level']; ?></td>
                                             <td><?php echo $v['user_jabatan']['nama_puskesmas']; ?></td>
 
-                                            <?php //if (in_array('updateUser', $user_hak) || in_array('deleteUser', $user_hak)) : 
-                                            ?>
-
-                                            <td>
-                                                <?php //if (in_array('updateUser', $user_hak)) : 
-                                                ?>
-                                                <a href="<?= base_url('users/ubah/' . $v['user_info']['id']) ?>" class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                                <?php //endif; 
-                                                ?>
-                                                <?php //if (in_array('deleteUser', $user_hak)) : 
-                                                ?>
-                                                <button type="button" class="btn btn-default" onclick="removeFunc(<?= $v['user_info']['id'] ?>)" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i></button>
-                                                <?php //endif; 
-                                                ?>
-                                            </td>
-                                            <?php //endif; 
-                                            ?>
+                                            <?php if (in_array('updateUser', $user_hak) || in_array('deleteUser', $user_hak)) : ?>
+                                                <td>
+                                                    <?php if (in_array('updateUser', $user_hak)) : ?>
+                                                        <a href="<?= base_url('users/ubah/' . $v['user_info']['id']) ?>" class="btn btn-default"><i class="fa fa-edit"></i></a>
+                                                    <?php endif; ?>
+                                                    <?php if (in_array('deleteUser', $user_hak)) : ?>
+                                                        <button type="button" class="btn btn-default" onclick="removeFunc(<?= $v['user_info']['id'] ?>)" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i></button>
+                                                    <?php endif; ?>
+                                                </td>
+                                            <?php endif; ?>
                                         </tr>
                                     <?php endforeach ?>
                                 <?php endif; ?>
@@ -108,31 +101,29 @@
 </div>
 <!-- /.content-wrapper -->
 
-<?php //if (in_array('deleteUser', $user_hak)) : 
-?>
-<!-- remove brand modal -->
-<div class="modal fade" tabindex="-1" role="dialog" id="removeModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Hapus User</h4>
-            </div>
+<?php if (in_array('deleteUser', $user_hak)) : ?>
+    <!-- remove brand modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="removeModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Hapus User</h4>
+                </div>
 
-            <form role="form" action="<?= base_url('users/delete') ?>" method="post" id="removeForm">
-                <div class="modal-body">
-                    <p>Yakin Data Dihapus?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
-                    <button type="submit" class="btn btn-primary">Hapus</button>
-                </div>
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<?php //endif; 
-?>
+                <form role="form" action="<?= base_url('users/delete') ?>" method="post" id="removeForm">
+                    <div class="modal-body">
+                        <p>Yakin Data Dihapus?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
+                        <button type="submit" class="btn btn-primary">Hapus</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+<?php endif; ?>
 
 <script type="text/javascript">
     $(document).ready(function() {

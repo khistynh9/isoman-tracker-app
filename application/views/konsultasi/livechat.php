@@ -31,7 +31,7 @@
           <div class="mesgs">
             <div class="msg_history" id="messages">
               <div class="recent_heading_msg">
-                <h4>NIK Pasien : <?= $nik = isset($nik_user) ? $nik_user : 'Pesan Belum Dipilih'; ?></h4>
+                <h4>Nama Pasien : <?= $nama = isset($user) ? $user['nama'] : 'Pesan Belum Dipilih'; ?></h4>
               </div><br>
             </div>
 
@@ -108,13 +108,16 @@
   ?>
     var nik_user = "<?php echo $nik_user;
                     ?>";
+    var pasien = "<?php echo $user['nama'];
+                  ?>";
     listRef.orderByChild("id_user").equalTo(nik_user).on("value", function(snapshot) {
       if (snapshot.exists()) {
         myFunction(nik_user);
       } else {
         listRef.push({
           id_admin: myName,
-          id_user: nik_user
+          id_user: nik_user,
+          pasien: pasien
         });
       }
     });
@@ -123,7 +126,6 @@
 
   function myFunction(nik) {
     $('#receiver').val(nik)
-
 
     db.ref("messages").on("child_added", function(snapshot) {
       var kirim = nik;

@@ -39,7 +39,7 @@
                             </tr>
                             <tr>
                                 <th>Jenis Kelamin</th>
-                                <td><?php echo ($users_data['jenis_kel'] == 1) ? 'Laki-laki' : 'Jenis Kelamin'; ?></td>
+                                <td><?php echo ($users_data['jenis_kel'] == 1) ? 'Laki-laki' : 'Perempuan'; ?></td>
                             </tr>
                             <tr>
                                 <th>No HP</th>

@@ -35,8 +35,10 @@ class Monitoring extends Admin_Controller
         foreach ($data as $key => $value) {
             if ($value['status'] == 1) {
                 $status = '<span class="label label-primary">Dalam Zona</span>';
+            } else if ($value['status'] == 2) {
+                $status = '<span class="label label-danger">Luar Zona</span>';
             } else {
-                $status = '<span class="label label-warning">Luar Zona</span>';
+                $status = '<span class="label label-warning">Belum Terdaftar</span>';
             }
             $result['data'][$key] = array(
                 $value['nik'],

@@ -21,6 +21,10 @@ class Pasien extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
+        $data_pasien = $this->model_pasien->getPasienDataLokasi();
+        $puskesmas = $this->model_puskesmas->getPuskesmasData();
+        $this->data['data_pasien_full'] = $data_pasien;
+        $this->data['puskesmas_sata'] = $puskesmas;
         $this->render_template('pasien/index', $this->data);
     }
 
@@ -39,7 +43,7 @@ class Pasien extends Admin_Controller
             // button
             $buttons = '';
 
-            $buttons = '<button type="button" class="btn btn-success btn-show-detail" data-nik="' . $value['nik'] . '" data-toggle="modal" data-target="#show-detail"><i class="fa fa-eye"></i></button>';
+            $buttons = '<button type="button" class="btn btn-default btn-show-detail" data-nik="' . $value['nik'] . '" data-toggle="modal" data-target="#show-detail"><i class="fa fa-eye"></i></button>';
 
             if (in_array('updatePasien', $this->hak_akses)) {
                 $buttons = '<button type="button" class="btn btn-default" onclick="editFunc(' . $value['nik'] . ')" data-toggle="modal" data-target="#editModal"><i class="fa fa-pencil"></i></button>';
@@ -72,39 +76,10 @@ class Pasien extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
-        $result = array('data' => array());
+        $post_data = $this->input->post('nik');
+        $data = $this->model_pasien->getPasienDataLokasi($post_data);
 
-        $data = $this->model_pasien->getPasienDataLokasi();
-
-        foreach ($data as $key => $value) {
-            $puskesmas_data = $this->model_puskesmas->getPuskesmasData($value['puskesmas_id']);
-
-            if ($value['status'] == 1) {
-                $status = '<span class="label label-warning">Positif Covid</span>';
-            } else if ($value['status'] == 2) {
-                $status = '<span class="label label-success">Negatif Covid</span>';
-            } else if ($value['status'] == 3) {
-                $status = '<span class="label label-primary">Sembuh</span>';
-            } else if ($value['status'] == 4) {
-                $status = '<span class="label label-warning">Meninggal</span>';
-            }
-
-            $result['data'][$key] = array(
-                $value['nik'],
-                $value['nama'],
-                $value['alamat'],
-                $value['tgl_lahir'],
-                $value['status_kependudukan'],
-                $value['jenis_kel'],
-                $value['no_telp'],
-                $puskesmas_data['nama_puskesmas'],
-                $value['loc_begin'],
-                $status
-            );
-        } // /foreach
-        // var_dump($result);
-        // exit();
-        echo json_encode($result);
+        echo json_encode($data);
     }
 
     //create user
@@ -132,6 +107,7 @@ class Pasien extends Admin_Controller
         if ($this->form_validation->run() == TRUE) {
             // true case
             //puskesmas id otomatis dari admin nakes
+            $date = date('Y-m-d');
             $password = $this->input->post('password');
             $puskesmas_id = $this->session->userdata('puskesmas_id');
             $data = array(
@@ -146,7 +122,8 @@ class Pasien extends Admin_Controller
                 'jml_kontak_erat' => $this->input->post('jml_kontak_erat'),
                 'status_kondisi' => $this->input->post('stat_kondisi'),
                 'status_kependudukan' => $this->input->post('kependudukan'),
-                'puskesmas_id' => $puskesmas_id
+                'puskesmas_id' => $puskesmas_id,
+                'tgl' => $date
             );
 
             $create = $this->model_pasien->create($data);
@@ -182,6 +159,7 @@ class Pasien extends Admin_Controller
 
             $nik = $this->input->post('nik');
             $loc = $this->input->post('lokasi');
+
             $data = array(
                 'loc_begin' => $loc,
                 'loc_end' => $loc,
@@ -219,14 +197,88 @@ class Pasien extends Admin_Controller
     }
 
 
-    //edit user
-    public function ubah()
+    public function ubah($id = null)
     {
-        //validasi hak akses
-        if (!in_array('updatePasien', $this->hak_akses)) {
+        if (!in_array('updateUser', $this->hak_akses)) {
             redirect('dashboard', 'refresh');
         }
 
-        $this->render_template('pasien/ubah', $this->data);
+        if ($id) {
+            $this->form_validation->set_rules('nik', 'NIK', 'required');
+            $this->form_validation->set_rules('nama', 'Nama', 'trim|required');
+            $this->form_validation->set_rules('alamat', 'Alamat Asal', 'trim|required');
+            $this->form_validation->set_rules('gender', 'Jenis Kelamin', 'trim|required');
+            $this->form_validation->set_rules('tgl_lahir', 'Tanggal Lahir', 'required');
+            $this->form_validation->set_rules('jml_kontak_erat', 'Jumlah Kontak Erat', 'required');
+            $this->form_validation->set_rules('kependudukan', 'Satus Kependudukan', 'required');
+            $this->form_validation->set_rules('stat_kondisi', 'Satus Kondisi', 'required');
+            $this->form_validation->set_rules('no_telp', 'Nomor HP', 'required');
+            $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|is_unique[users.username]');
+            $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[8]');
+
+            if ($this->form_validation->run() == TRUE) {
+                // true case
+                //puskesmas id otomatis dari admin nakes
+                $date = date('Y-m-d');
+                $loc = $this->input->post('loc_begin');
+
+                $data = array(
+                    'nik' => $this->input->post('nik'),
+                    'nama' => $this->input->post('nama'),
+                    'alamat' => $this->input->post('alamat'),
+                    'tgl_lahir' => $this->input->post('tgl_lahir'),
+                    'jml_kontak_erat' => $this->input->post('jml_kontak_erat'),
+                    'no_telp' => $this->input->post('no_telp'),
+                    'username' => $this->input->post('username'),
+                    'password' => $this->input->post('password'),
+                    'status_kependudukan' => $this->input->post('kependudukan'),
+                    'status_kondisi' => $this->input->post('stat_kondisi'),
+                    'puskesmas_id' => $this->input->post('puskesmas'),
+                    'tgl' => $date
+                );
+
+                $update = $this->model_pasien->edit($data, $id, $loc);
+                if ($update == true) {
+                    $this->session->set_flashdata('success', 'Berhasil Diubah!');
+                    redirect('pasien/', 'refresh');
+                } else {
+                    $this->session->set_flashdata('errors', 'Gagal Mengubah!!');
+                    redirect('pasien/ubah/' . $id, 'refresh');
+                }
+            } else {
+                // false case
+                $pasien_data = $this->model_pasien->getPasienDataLokasi($id);
+
+                $this->data['puskesmas_data'] = $this->model_puskesmas->getPuskesmasData();
+
+                $this->data['pasien_data'] = $pasien_data[0];
+
+                $this->render_template('pasien/ubah', $this->data);
+            }
+        }
+    }
+
+    public function delete()
+    {
+        if (!in_array('deletePasien', $this->hak_akses)) {
+            redirect('dashboard', 'refresh');
+        }
+
+        $users_id = $this->input->post('pasien_id');
+
+        $response = array();
+        if ($users_id) {
+            $delete = $this->model_pasien->delete($users_id);
+            $delete_lok = $this->model_pasien->delete_loc($users_id);
+            if ($delete == true && $delete_lok) {
+                $this->session->set_flashdata('success', 'Berhasil Dihapus!');;
+            } else {
+                $this->session->set_flashdata('error', 'Gagal Menghapus!!');
+            }
+        } else {
+            $this->session->set_flashdata('error', 'Gagal Menghapus!!');
+        }
+
+        echo json_encode($response);
     }
 }

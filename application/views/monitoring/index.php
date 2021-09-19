@@ -92,7 +92,6 @@
                                             <th>Nama</th>
                                             <th>Alamat</th>
                                             <th>No HP</th>
-                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -104,13 +103,6 @@
                                                     <td><?php echo $v['nama']; ?></td>
                                                     <td><?php echo $v['alamat']; ?></td>
                                                     <td><?php echo $v['no_telp']; ?></td>
-                                                    <td>
-                                                        <?php if ($v['status'] == 1) {
-                                                            echo '<span class="label label-primary">Dalam Zona</span>';
-                                                        } else if ($v['status'] == 2) {
-                                                            echo '<span class="label label-danger">DiluarZona</span>';
-                                                        } ?>
-                                                    </td>
                                                     <td>
                                                         <a href="<?= base_url('monitor/lokasi/') ?>" class="btn btn-default"><i class="fa fa-map-marker"></i></a>
                                                         <a href="<?= base_url('konsultasi/chat/') . $v['nik'] ?>" class="btn btn-default"><i class="fa fa fa-comments-o"></i></a>

@@ -31,12 +31,12 @@
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <div class="box">
-                                                <div class="box-header">
+                                                <!-- <div class="box-header">
                                                     <h3 class="box-title">Pasien Isoman</h3>
-                                                </div>
+                                                </div> -->
                                                 <!-- /.box-header -->
                                                 <div class="box-body">
-                                                    <table id="manageTable" class="table table-bordered table-striped">
+                                                    <table class="table table-bordered table-striped">
                                                         <thead>
                                                             <tr>
                                                                 <th>NIK</th>
@@ -44,7 +44,9 @@
                                                                 <th>Status</th>
                                                             </tr>
                                                         </thead>
+                                                        <tbody id="detail">
 
+                                                        </tbody>
                                                     </table>
                                                 </div>
                                                 <!-- /.box-body -->
@@ -105,6 +107,24 @@
 
     let puskesmas_id = "<?= $this->session->userdata('puskesmas_id'); ?>";
     var pasienRef = db.ref('lokasi').orderByChild('puskesmas_id').equalTo(puskesmas_id);
+
+    pasienRef.on("child_added", snapshot => {
+        var list = "";
+        var label = "";
+        let nik = snapshot.val().nik;
+        let status = snapshot.val().status;
+        let nama = snapshot.val().nama;
+        if (status == 1) {
+            label += '<span class="label label-primary">Dalam Zona</span>';
+        } else if (status == 2) {
+            label += '<span class="label label-danger">Luar Zona</span>';
+        }
+
+        list += '<tr>' + '<td>' + nik + '</td >' + '<td>' + nama + '</td>' + '<td>' + label + '</td>' + '</tr>';
+
+        document.getElementById("detail").innerHTML += list;
+
+    });
 </script>
 <script type="text/javascript">
     var manageTable;
@@ -113,13 +133,15 @@
         //Initialize Select2 Elements
         $('.select2').select2()
 
-        manageTable = $('#manageTable').DataTable({
-            'ajax': base_url + 'monitoring/fetchPasienData',
-            'order': []
-        });
+        // manageTable = $('#manageTable').DataTable({
+        //     'ajax': base_url + 'monitoring/fetchPasienData',
+        //     'order': []
+        // });
 
         $("#monitorMainNav").addClass('active');
         $("#lokasiMonitorSubNav").addClass('active');
+
+
     });
 
     // var firstLatLng, firstPoint, secondLatLng, secondPoint, distance, length, polyline;

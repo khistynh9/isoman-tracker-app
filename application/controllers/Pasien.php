@@ -199,7 +199,7 @@ class Pasien extends Admin_Controller
 
     public function ubah($id = null)
     {
-        if (!in_array('updateUser', $this->hak_akses)) {
+        if (!in_array('updatePasien', $this->hak_akses)) {
             redirect('dashboard', 'refresh');
         }
 
@@ -269,8 +269,8 @@ class Pasien extends Admin_Controller
         $response = array();
         if ($users_id) {
             $delete = $this->model_pasien->delete($users_id);
-            $delete_lok = $this->model_pasien->delete_loc($users_id);
-            if ($delete == true && $delete_lok) {
+            // $delete_lok = $this->model_pasien->delete_loc($users_id);
+            if ($delete == true) {
                 $this->session->set_flashdata('success', 'Berhasil Dihapus!');;
             } else {
                 $this->session->set_flashdata('error', 'Gagal Menghapus!!');

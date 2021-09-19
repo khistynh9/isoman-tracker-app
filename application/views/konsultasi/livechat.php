@@ -19,7 +19,6 @@
           <div class="inbox_people">
             <div class="headind_srch">
               <div class="recent_heading">
-                <button onclick="tambahpesan('1')">klik tambah</button>
                 <h4>Recent</h4>
               </div>
             </div>
@@ -127,27 +126,27 @@
   function myFunction(nik) {
     $('#receiver').val(nik)
 
-    db.ref("messages").on("child_added", function(snapshot) {
+    db.ref("cat").on("child_added", function(snapshot) {
       var kirim = nik;
       var html = "";
 
-      if (snapshot.val().reciver == myName && snapshot.val().sender == kirim) {
+      if (snapshot.val().user == myName && snapshot.val()._id == kirim) {
         //memberi pesan id unik
         html += "<div class='incoming_msg' id='message-" + snapshot.key + "'>";
         html += "<div class='incoming_msg_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>";
         html += "<div class='received_msg'>";
         html += "<div class='received_withd_msg' >";
-        html += "<p>" + snapshot.val().sender + ": " + snapshot.val().message + "</p>";
+        html += "<p>" + snapshot.val().user + ": " + snapshot.val().text + "</p>";
 
-        html += " <span class='time_date'> 11:01 AM    |    June 9</span></div>";
+        html += " <span class='time_date'>" + snapshot.val().createdAt + "</span></div>";
         html += "</div>";
         html += "</div>";
 
-      } else if (snapshot.val().sender == myName && snapshot.val().reciver == kirim) {
+      } else if (snapshot.val()._id == myName && snapshot.val().user == kirim) {
         html += "<div class='outgoing_msg' id='message-" + snapshot.key + "'>";
         html += "<div class='sent_msg'>";
-        html += "<p>" + snapshot.val().message + " </p>";
-        html += "<span class='time_date'> 11:01 AM    |    Today &nbsp;";
+        html += "<p>" + snapshot.val().text + " </p>";
+        html += "<span class='time_date'>" + snapshot.val().createdAt;
         html += "<button data-id='" + snapshot.key + "' onclick='deleteMessage(this);'>";
         html += "Hapus";
         html += "</button>";
@@ -165,11 +164,17 @@
     var message = document.getElementById("messaage").value;
     var reciv = document.getElementById("receiver").value;
 
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date + ' ' + time;
+
     //save in database
-    firebase.database().ref("messages").push().set({
-      "sender": myName,
-      "reciver": reciv,
-      "message": message
+    firebase.database().ref("cat").push().set({
+      "_id": myName,
+      "createdAt": dateTime,
+      "text": message,
+      "user": reciv
     });
 
     return false;
